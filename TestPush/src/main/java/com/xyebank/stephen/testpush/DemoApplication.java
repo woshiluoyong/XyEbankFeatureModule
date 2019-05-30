@@ -10,6 +10,6 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if(StephenPushUtils.getInstance().shouldInit(this))StephenPushUtils.getInstance().initStephenPush(this, StephenPushUtils.PushTypeXM,"2882303761518011547","5661801118547");
+        if(StephenPushUtils.getInstance().shouldInit(this))StephenPushUtils.getInstance().initStephenPush(this,true, StephenPushUtils.PushTypeXM,"2882303761518011547","5661801118547");
     }
 }

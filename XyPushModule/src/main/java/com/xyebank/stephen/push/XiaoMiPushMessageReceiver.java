@@ -46,6 +46,7 @@ public class XiaoMiPushMessageReceiver extends PushMessageReceiver {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
                 log = "register_success:" + mRegId;
+                StephenPushUtils.getInstance().uploadStephenPushToken(StephenPushUtils.PushTypeXM, mRegId);
             } else {
                 log = "register_fail:" + message.getReason();
             }
@@ -115,7 +116,8 @@ public class XiaoMiPushMessageReceiver extends PushMessageReceiver {
         if (MiPushClient.COMMAND_REGISTER.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
-                log = "register_success";
+                log = "register_success:"+mRegId;
+                StephenPushUtils.getInstance().uploadStephenPushToken(StephenPushUtils.PushTypeXM, mRegId);
             } else {
                 log = "register_fail";
             }

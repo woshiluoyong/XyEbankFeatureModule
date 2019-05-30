@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.xyebank.stephen.push.StephenPushUtils;
+
 public class MainActivity2 extends Activity {
 
     @Override
