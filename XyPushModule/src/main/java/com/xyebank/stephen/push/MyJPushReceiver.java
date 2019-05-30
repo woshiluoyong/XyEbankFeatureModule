@@ -14,13 +14,7 @@ import java.util.Iterator;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.helper.Logger;
 
-/**
- * 自定义接收器(目前被MyJPushMessageReceiver代替)
- * 
- * 如果不定义这个 Receiver，则：
- * 1) 默认用户会打开主界面
- * 2) 接收不到自定义消息
- */
+//自定义接收器(目前被MyJPushMessageReceiver代替)如果不定义这个 Receiver，则：1) 默认用户会打开主界面, 2) 接收不到自定义消息
 public class MyJPushReceiver extends BroadcastReceiver {
 	public static final String TAG = "JIGUANG-Example";
 

@@ -1,5 +1,6 @@
 package com.xyebank.stephen.push;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
@@ -10,6 +11,8 @@ import android.util.Log;
 import java.util.List;
 
 import com.huawei.android.hms.agent.HMSAgent;
+import com.huawei.android.hms.agent.common.handler.ConnectHandler;
+import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
 import com.xiaomi.mipush.sdk.Logger;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -19,7 +22,6 @@ public class StephenPushUtils {
     private static volatile StephenPushUtils singleton;
     public static final int PushTypeJG = 0,PushTypeXM = 1,PushTypeHW = 2;
     private int bootPushType = PushTypeJG;//0极光,1小米,2华为
-    public static final String StephenPushTag = "com.stephen.push";//命令行终端输入 adb logcat | grep XXX
     private static String miPushAppID = null, miPushAppKEY = null;//小米push相关参数
 
     private StephenPushUtils() {}
@@ -41,7 +43,7 @@ public class StephenPushUtils {
 
     public void initStephenPush(Application context, int bootPushType, String miPushAppId, String miPushAppKey){//注册启动push服务
         if(bootPushType == PushTypeXM && (TextUtils.isEmpty(miPushAppId) || TextUtils.isEmpty(miPushAppKey))){
-            Log.e(StephenPushTag, "启用小米推送必须同时设置小米的AppId和AppKey,已取消启动推送,请设置值后重试!");
+            System.out.println("=====com.stephen.push=====>启用小米推送必须同时设置小米的AppId和AppKey,已取消启动推送,请设置值后重试!");
             return;
         }// end of if
         this.bootPushType = bootPushType;
@@ -57,12 +59,12 @@ public class StephenPushUtils {
 
                     @Override
                     public void log(String content, Throwable t) {
-                        Log.d(StephenPushTag, content, t);
+                        System.out.println("=====com.stephen.push=====>" + content + "=====>" + (null != t ? t.getMessage() : ""));
                     }
 
                     @Override
                     public void log(String content) {
-                        Log.d(StephenPushTag, content);
+                        System.out.println("=====com.stephen.push=====>" + content);
                     }
                 });
                 break;
@@ -74,6 +76,26 @@ public class StephenPushUtils {
                 JPushInterface.setDebugMode(true);
                 break;
         }// end of switch
+    }
+
+    //应用主activity的onCreate方法中必须调用
+    public void startHuaWeiPush(Activity activity){
+        if(bootPushType != PushTypeHW){
+            System.out.println("=====com.stephen.push=====>如果开始华为推送必须先初始化华为推送而不是其他推送!");
+            return;
+        }// end of if
+        HMSAgent.connect(activity, new ConnectHandler() {
+            @Override
+            public void onConnect(int rst) {
+                System.out.println("===com.stephen.push===华为推送==onConnect====>"+rst);
+            }
+        });
+        HMSAgent.Push.getToken(new GetTokenHandler() {
+            @Override
+            public void onResult(int rst) {
+                System.out.println("===com.stephen.push===华为推送==GetTokenHandler====>"+rst);
+            }
+        });
     }
 
     public boolean shouldInit(Context context) {

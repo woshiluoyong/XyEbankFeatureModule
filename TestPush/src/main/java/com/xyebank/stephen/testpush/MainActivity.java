@@ -38,6 +38,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StephenPushUtils.getInstance().startHuaWeiPush(this);
+
         mLogView = (TextView) findViewById(R.id.log);
         // 设置接收消息时间
         findViewById(R.id.set_accept_time).setOnClickListener(new OnClickListener() {
@@ -83,19 +86,6 @@ public class MainActivity extends Activity {
                 //MiPushClient.resumePush(MainActivity.this, null);
                 Intent intent = new Intent(MainActivity.this, MainActivity2.class);
                 startActivity(intent);
-            }
-        });
-
-        HMSAgent.connect(this, new ConnectHandler() {
-            @Override
-            public void onConnect(int rst) {
-                System.out.println("====华为推送==onConnect====>"+rst);
-            }
-        });
-        HMSAgent.Push.getToken(new GetTokenHandler() {
-            @Override
-            public void onResult(int rst) {
-                System.out.println("====华为推送==GetTokenHandler====>"+rst);
             }
         });
 
