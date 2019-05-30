@@ -12,59 +12,31 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <permission
-        android:name="com.xyebank.stephen.push.permission.MIPUSH_RECEIVE"
+        android:name="${applicationId}.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.xyebank.stephen.push.permission.MIPUSH_RECEIVE" />
+    <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
 
     <!-- 如果是安卓8.0，应用编译配置的targetSdkVersion>=26，请务必添加以下权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <permission
-        android:name="com.xyebank.stephen.push.permission.PROCESS_PUSH_MSG"
+        android:name="${applicationId}.permission.PROCESS_PUSH_MSG"
         android:protectionLevel="signatureOrSystem" /> <!-- 接收PUSH TOKEN的广播以及PUSH消息需要定义该权限 -->
-    <uses-permission android:name="com.xyebank.stephen.push.permission.PROCESS_PUSH_MSG" /> <!-- 接收PUSH TOKEN的广播以及PUSH消息需要定义该权限 -->
+    <uses-permission android:name="${applicationId}.permission.PROCESS_PUSH_MSG" /> <!-- 接收PUSH TOKEN的广播以及PUSH消息需要定义该权限 -->
 
     <permission
-        android:name="com.xyebank.stephen.push.permission.JPUSH_MESSAGE"
+        android:name="${applicationId}.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.xyebank.stephen.push.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
-    <application
-        android:name=".DemoApplication"
-        android:icon="@drawable/mipush_logo"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity2"/>
-        <activity android:name=".HwTranslateActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:host="com.xyebank.stephen.push"
-                    android:path="/notification"
-                    android:scheme="stephenpush" />
-            </intent-filter>
-        </activity>
+    <application>
 
         <!-- 小米Push start -->
-        <activity
-            android:name=".PermissionActivity"
-            android:label=""
-            android:theme="@style/PermissionDialog" />
-
         <service
             android:name="com.xiaomi.push.service.XMJobService"
             android:enabled="true"
@@ -83,6 +55,7 @@
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true" />
 
+        <!--**********依赖包名的地方**********-->
         <receiver
             android:name=".XiaoMiPushMessageReceiver"
             android:exported="true">
@@ -101,7 +74,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -119,16 +91,16 @@
         <!-- 华为Push start -->
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="appid=100816565" />
+            android:value="appid=${HAIWEI_APPID}" />
 
         <provider
             android:name="com.huawei.hms.update.provider.UpdateProvider"
-            android:authorities="com.xyebank.stephen.push.hms.update.provider"
+            android:authorities="${applicationId}.hms.update.provider"
             android:exported="false"
             android:grantUriPermissions="true" />
         <provider
             android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
-            android:authorities="com.xyebank.stephen.push.updateSdk.fileProvider"
+            android:authorities="${applicationId}.updateSdk.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true" />
 
@@ -173,6 +145,7 @@
                 android:value="androidhwext:style/Theme.Emui.Translucent" />
         </activity>
 
+        <!--**********依赖包名的地方**********-->
         <receiver android:name=".HuaWeiPushMessageReceiver">
             <intent-filter>
                 <action android:name="com.huawei.android.push.intent.REGISTRATION" />
@@ -217,7 +190,7 @@
         <!-- since 3.0.9 Required SDK 核心功能 -->
         <provider
             android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="com.xyebank.stephen.push.DataProvider"
+            android:authorities="${applicationId}.DataProvider"
             android:exported="true" tools:replace="android:exported"/>
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的 JPush 服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，或把 enabled 设置成 false ；App 不会被其他 App 拉起，但会拉起其他的 App。 -->
@@ -227,14 +200,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </service>
 
         <!-- since 3.1.0 Required SDK 核心功能 -->
         <provider
             android:name="cn.jpush.android.service.DownloadProvider"
-            android:authorities="com.xyebank.stephen.push.DownloadProvider"
+            android:authorities="${applicationId}.DownloadProvider"
             android:exported="true" />
 
         <!-- Required SDK 核心功能 -->
@@ -243,8 +216,7 @@
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -254,7 +226,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
@@ -268,7 +239,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
         <!-- SDK 核心功能 -->
@@ -279,7 +250,7 @@
             android:theme="@style/MyDialogStyle">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
 
@@ -292,6 +263,7 @@
         <!-- Since JCore2.0.0 Required SDK核心功能 -->
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
+        <!--**********依赖包名的地方**********-->
         <service
             android:name=".JPushService"
             android:enabled="true"
@@ -309,13 +281,14 @@
         <!-- 新的 tag/alias 接口结果返回需要开发者配置一个自定的广播 -->
         <!-- 3.3.0开始所有事件将通过该类回调 -->
         <!-- 该广播需要继承 JPush 提供的 JPushMessageReceiver 类, 并如下新增一个 Intent-Filter -->
+        <!--**********依赖包名的地方**********-->
         <receiver
             android:name=".MyJPushMessageReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
 
                 <!-- Required 用户注册 SDK 的 intent -->
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
@@ -327,7 +300,7 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -348,16 +321,17 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
                 &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt;
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>-->
 
         <!-- User defined. 用户自定义 Receiver 接收被拉起回调 -->
         <!-- 自定义 Receiver 组件，继承cn.jpush.android.service.WakedResultReceiver类,复写onWake(int wakeType)或 onWake(Context context, int wakeType)方法以监听被拉起 -->
+        <!--**********依赖包名的地方**********-->
         <receiver android:name=".MyJPushWakeReceiver">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.WakedReceiver" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -369,19 +343,14 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.JNotifyActivity" />
-                <category android:name="com.xyebank.stephen.push" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
 
-        <!-- Required. For publish channel feature -->
-        <!-- JPUSH_CHANNEL 是为了方便开发者统计 APK 分发渠道。 -->
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
-        <!-- Required. AppKey copied from Portal -->
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="18ecbb94a863e01709c61007" />
+        <!-- Required. JPUSH_CHANNEL 是为了方便开发者统计 APK 分发渠道。 这里的meta-data后面gradle可以设值-->
+        <meta-data android:name="JPUSH_CHANNEL" android:value="${JPUSH_CHANNEL}" />
+        <!-- Required. AppKey copied from Portal 这里的meta-data后面gradle可以设值-->
+        <meta-data android:name="JPUSH_APPKEY" android:value="${JPUSH_APPKEY}" />
         <!-- 极光Push end -->
     </application>
 

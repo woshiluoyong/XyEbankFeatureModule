@@ -1,47 +1,17 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "com.xyebank.stephen.push"
+        /*applicationId "com.xyebank.stephen.push"*/
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
-        ndk {
-            //选择要添加的对应 cpu 类型的 .so 库。
+        ndk {//选择要添加的对应 cpu 类型的 .so 库。还可以添加 'x86', 'x86_64', 'mips', 'mips64'
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
-            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
-        }
-
-        manifestPlaceholders = [
-                JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : "18ecbb94a863e01709c61007", //JPush 上注册的包名对应的 Appkey.
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
-        ]
-    }
-
-    signingConfigs {//配置keystore签名
-        release {
-            storeFile file("zhongshukeystore.jks")
-            storePassword "8888888888"
-            keyAlias "zhongshu"
-            keyPassword "8888888888"
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-        debug {//debug也用release签名
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
 
@@ -54,8 +24,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation files('libs/MiPush_SDK_Client_3_6_18.jar')
-    implementation 'com.huawei.android.hms:push:2.6.3.301'
-    implementation 'cn.jiguang.sdk:jpush:3.3.1'
-    implementation 'cn.jiguang.sdk:jcore:2.0.1'
+    api files('libs/MiPush_SDK_Client_3_6_18.jar')
+    api 'com.huawei.android.hms:push:2.6.3.301'
+    api 'cn.jiguang.sdk:jpush:3.3.1'
+    api 'cn.jiguang.sdk:jcore:2.0.1'
 }

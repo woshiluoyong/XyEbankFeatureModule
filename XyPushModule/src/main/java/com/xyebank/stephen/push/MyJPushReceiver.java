@@ -15,7 +15,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.helper.Logger;
 
 /**
- * 自定义接收器
+ * 自定义接收器(目前被MyJPushMessageReceiver代替)
  * 
  * 如果不定义这个 Receiver，则：
  * 1) 默认用户会打开主界面
@@ -48,11 +48,11 @@ public class MyJPushReceiver extends BroadcastReceiver {
 				System.out.println("===========[MyJPushReceiver] 用户点击打开了通知");
 
 				//打开自定义的Activity
-				Intent i = new Intent(context, MainActivity.class);
+				/*Intent i = new Intent(context, MainActivity.class);
 				i.putExtras(bundle);
 				//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-				context.startActivity(i);
+				context.startActivity(i);*/
 
 			} else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
 				System.out.println("===========[MyJPushReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
