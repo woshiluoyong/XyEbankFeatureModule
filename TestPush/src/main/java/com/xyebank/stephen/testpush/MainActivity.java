@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ((DemoApplication)getApplication()).setMainActivity(this);
         StephenPushUtils.getInstance().startHuaWeiPush(this);
 
         mLogView = (TextView) findViewById(R.id.log);
@@ -89,12 +91,11 @@ public class MainActivity extends Activity {
             }
         });
 
-        System.out.println("====isActivityRunning======>"+StephenPushUtils.getInstance().isActivityRunning(this, MainActivity.class.getName()));
+        String pushParam = getIntent().getStringExtra(PushTranslateActivity.PushParamKey);
+        if(!TextUtils.isEmpty(pushParam))receiveFromPush(pushParam);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("=====MainActivity=====onActivityResult==========>");
+    public void receiveFromPush(String param){
+        System.out.println("=====接收统一操作的Push参数=====>"+param);
     }
 }

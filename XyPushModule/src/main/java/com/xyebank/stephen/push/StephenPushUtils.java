@@ -146,6 +146,7 @@ public class StephenPushUtils {
             System.out.println("=====com.stephen.push=====>"+msg);
             return;
         }// end of if
+        System.out.println("=====com.stephen.push====开始上报Token===>"+pushToken);
         Map<String, Object> map = new HashMap<>();
         map.put("offset", 0);
         map.put("limit", 20);
