@@ -61,7 +61,7 @@ public void receiveFromPush(String param){
 }
 ```
 
-* 最后在PushTranslateActivity中添加如下代码处理后台返回参数 *(注:====>处代码使用时必须在DemoApplication中定义private MainActivity mainActivity;然后为mainActivity设置上Getter/Settter)*
+* 最后在PushTranslateActivity中添加如下代码处理后台返回参数 *(注:====>处代码使用时必须在DemoApplication中定义private MainActivity mainActivity;然后为mainActivity设置上Getter/Settter,此处操作也可以换成发自定义广播)*
 
 ```
 @Override
@@ -90,3 +90,5 @@ protected void onCreate(Bundle savedInstanceState) {
 ```
 
 * 最后就是回到MainActivity中的receiveFromPush方法中根据参数处理对应跳转逻辑
+
+# 注意:后台推送处需要推送的是自定义动作哈,值为:"intent://com.xyebank.stephen.push/notification?action=stephen-test-parameter#Intent;scheme=stephenpush;launchFlags=0x10000000;end",里面的action=stephen-test-parameter就是键值对参数

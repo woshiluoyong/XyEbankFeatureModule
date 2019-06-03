@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.httpurlconnectionutil.RomUtils;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
@@ -85,9 +86,9 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                //MiPushClient.resumePush(MainActivity.this, null);
-                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                startActivity(intent);
+                //Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                //startActivity(intent);
+                StephenPushUtils.getInstance().uploadStephenPushToken("18381062895","123",StephenPushUtils.AppTypeJRY);
             }
         });
 

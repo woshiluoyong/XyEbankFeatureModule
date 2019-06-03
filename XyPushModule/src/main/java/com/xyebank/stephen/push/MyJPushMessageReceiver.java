@@ -47,7 +47,7 @@ public class MyJPushMessageReceiver extends JPushMessageReceiver {
     public void onRegister(Context context, String s) {
         super.onRegister(context, s);
         System.out.println("===com.stephen.push==JPush======onRegister=============>"+s);
-        StephenPushUtils.getInstance().uploadStephenPushToken(StephenPushUtils.PushTypeJG, s);
+        StephenPushUtils.getInstance().recordStephenPushToken(StephenPushUtils.PushTypeJG, s);
     }
 
     @Override

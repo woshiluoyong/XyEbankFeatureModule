@@ -16,7 +16,7 @@ public class HuaWeiPushMessageReceiver extends PushReceiver {
     public void onToken(Context context, String token, Bundle extras) {
         super.onToken(context, token, extras);
         System.out.println("===com.stephen.push==HWPush==onToken1====>"+token);
-        StephenPushUtils.getInstance().uploadStephenPushToken(StephenPushUtils.PushTypeHW, token);
+        StephenPushUtils.getInstance().recordStephenPushToken(StephenPushUtils.PushTypeHW, token);
     }
 
     @Override
@@ -41,6 +41,6 @@ public class HuaWeiPushMessageReceiver extends PushReceiver {
     public void onToken(Context context, String token) {
         super.onToken(context, token);
         System.out.println("===com.stephen.push==HWPush==onToken2====>"+token);
-        StephenPushUtils.getInstance().uploadStephenPushToken(StephenPushUtils.PushTypeHW, token);
+        StephenPushUtils.getInstance().recordStephenPushToken(StephenPushUtils.PushTypeHW, token);
     }
 }
