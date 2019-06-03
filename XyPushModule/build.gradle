@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
+    buildToolsVersion '28.0.2'
 
     defaultConfig {
         /*applicationId "com.xyebank.stephen.push"*/
@@ -18,7 +19,7 @@ android {
     lintOptions {
         disable 'LongLogTag'
         disable 'GoogleAppIndexingWarning'
-        baseline file("lint-baseline.xml")
+        //baseline file("lint-baseline.xml")
     }
 }
 

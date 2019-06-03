@@ -97,6 +97,6 @@ public class MainActivity extends Activity {
     }
 
     public void receiveFromPush(String param){
-        System.out.println("=====接收统一操作的Push参数=====>"+param);
+        System.out.println("====com.stephen.push===接收统一操作的Push参数=====>"+param);
     }
 }

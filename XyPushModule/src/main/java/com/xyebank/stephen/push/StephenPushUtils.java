@@ -89,7 +89,7 @@ public class StephenPushUtils {
             @Override
             public void onError(Exception e) {
                 String msg = (null != e ? e.toString() : "Push开关请求报错为空!");
-                System.out.println("======com.stephen.push======>doPost Error:" + msg);
+                System.out.println("======com.stephen.push=====>Push开关初始化请求Error:" + msg);
                 if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
         }, map);
@@ -192,6 +192,23 @@ public class StephenPushUtils {
                 System.out.println("=====com.stephen.push=====>"+msg);
                 break;
         }// end of switch
+    }
+
+    public String getStephenPushToken(){
+        return getStephenPushToken(bootPushType);
+    }
+
+    public String getStephenPushToken(int curPushType){
+        String pushToken = SharedUtil.getString(context,PushTokenKey+curPushType);
+        switch(curPushType){
+            case PushTypeJG:
+                if(TextUtils.isEmpty(pushToken))pushToken = JPushInterface.getRegistrationID(context);
+                break;
+            case PushTypeXM:
+                if(TextUtils.isEmpty(pushToken))pushToken = MiPushClient.getRegId(context);
+                break;
+        }// end of switch
+        return (TextUtils.isEmpty(pushToken)) ? "" : pushToken;
     }
 
     //上报推送对应token及信息

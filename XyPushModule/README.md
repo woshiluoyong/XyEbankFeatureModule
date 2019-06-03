@@ -1,4 +1,18 @@
 # Push模块集成使用说明
+* 在项目根build.gradle处加入
+
+```
+allprojects {
+    repositories {
+        ...
+        maven {url 'http://developer.huawei.com/repo/'}
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+* 依赖本项目XyPushModule,注意:如果你项目用的gradle插件版本低于3.0,需要修改push模块项目中的implementation和api改成compile
+
 * 在业务项目的build.gradle处加入
 * 极光和华为的配置代码到manifestPlaceholders
 * dependencies处依赖上项目XyPushModule
@@ -55,13 +69,17 @@ if(StephenPushUtils.getInstance().shouldInit(this))StephenPushUtils.getInstance(
 onCreate中:
 StephenPushUtils.getInstance().startHuaWeiPush(this);
 
+String pushParam = getIntent().getStringExtra(PushTranslateActivity.PushParamKey);
+if(!TextUtils.isEmpty(pushParam))receiveFromPush(pushParam);
+
 定义方法:
 public void receiveFromPush(String param){
-    System.out.println("=====接收统一操作的Push参数=====>"+param);
+    System.out.println("===com.stephen.push====接收统一操作的Push参数=====>"+param);
 }
 ```
 
-* 最后在PushTranslateActivity中添加如下代码处理后台返回参数 *(注:====>处代码使用时必须在DemoApplication中定义private MainActivity mainActivity;然后为mainActivity设置上Getter/Settter,此处操作也可以换成发自定义广播)*
+* 最后在PushTranslateActivity中添加如下代码处理后台返回参数 *(注:====>处代码使用时必须在DemoApplication中定义private MainActivity mainActivity;然后为mainActivity设置上Getter/Settter,
+  此处操作也可以换成发自定义广播,然后在MainActivity的onCreate中加上((DemoApplication)getApplication()).setMainActivity(this);),下面代码中MainActivity.class.getName()的MainActivity也要相应替换成你主Activity*
 
 ```
 @Override
@@ -76,7 +94,7 @@ protected void onCreate(Bundle savedInstanceState) {
         e.printStackTrace();
     }
     boolean isRunning = StephenPushUtils.getInstance().isActivityRunning(this, MainActivity.class.getName());//判断主Activity是否在运行来确定app是否被杀死
-    System.out.println("===PushTranslateActivity===isRunning===>"+isRunning+"==pushParam===>"+pushParam);
+    System.out.println("===com.stephen.push===PushTranslateActivity===isRunning===>"+isRunning+"==pushParam===>"+pushParam);
 
     if(isRunning){
         ====>((DemoApplication)getApplication()).getMainActivity().receiveFromPush(pushParam);

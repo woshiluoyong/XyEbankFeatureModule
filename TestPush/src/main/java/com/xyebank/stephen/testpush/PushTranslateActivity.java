@@ -12,7 +12,7 @@ public class PushTranslateActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main3);
+        //setContentView(R.layout.activity_main3);
 
         String pushParam = null;
         try {
@@ -21,7 +21,7 @@ public class PushTranslateActivity extends Activity {
             e.printStackTrace();
         }
         boolean isRunning = StephenPushUtils.getInstance().isActivityRunning(this, MainActivity.class.getName());//判断主Activity是否在运行来确定app是否被杀死
-        System.out.println("===PushTranslateActivity===isRunning===>"+isRunning+"==pushParam===>"+pushParam);
+        System.out.println("===com.stephen.push====PushTranslateActivity===isRunning===>"+isRunning+"==pushParam===>"+pushParam);
         if(isRunning){
             ((DemoApplication)getApplication()).getMainActivity().receiveFromPush(pushParam);
         }else{
