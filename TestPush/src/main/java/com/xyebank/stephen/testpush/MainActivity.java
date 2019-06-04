@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         ((DemoApplication)getApplication()).setMainActivity(this);
-        StephenPushUtils.getInstance().startHuaWeiPush(this);
+        StephenPushUtils.getInstance().setActivityForBindHw(this);
 
         mLogView = (TextView) findViewById(R.id.log);
         // 设置接收消息时间

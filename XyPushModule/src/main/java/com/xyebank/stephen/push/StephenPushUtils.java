@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Process;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -34,8 +35,9 @@ public class StephenPushUtils {
     private Map<Integer,String> pushTypeMap = new HashMap<>();
     private int bootPushType = PushTypeJG;//0极光,1小米,2华为
     private Application context = null;
+    private Activity activityForHw = null;
     private boolean isShowInfoMsg = false;
-    private String serverBaseIpPort = "http://192.168.2.10:9966";
+    private String serverBaseIpPort = "https://sjd-test.xycredit.com.cn";
     private static String miPushAppID = null, miPushAppKEY = null;//小米push相关参数
 
     private StephenPushUtils() {}
@@ -72,6 +74,7 @@ public class StephenPushUtils {
         HttpUtils.doPost(context, serverBaseIpPort+"/push/service/pushOnOff", new HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
+                //response = "HW";//test
                 System.out.println("======com.stephen.push======>Push开关请求Ok:" + response);
                 if(!TextUtils.isEmpty(response)){
                     for(Map.Entry<Integer, String> entry : pushTypeMap.entrySet()) {
@@ -95,7 +98,7 @@ public class StephenPushUtils {
         }, map);
     }
 
-    private void initStephenPushCore(int bootPushType, String miPushAppId, String miPushAppKey){//注册启动push服务
+    private void initStephenPushCore(final int bootPushType, String miPushAppId, String miPushAppKey){//注册启动push服务
         if(bootPushType == PushTypeXM && (TextUtils.isEmpty(miPushAppId) || TextUtils.isEmpty(miPushAppKey))){
             String msg = "启用小米推送必须同时设置小米的AppId和AppKey,已取消启动推送,请设置值后重试!";
             if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
@@ -136,26 +139,31 @@ public class StephenPushUtils {
                 if(isShowInfoMsg)Toast.makeText(context, "初始化极光推送", Toast.LENGTH_LONG).show();
                 break;
         }// end of switch
+        (new Handler()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recordStephenMiPushToken();//谨慎起见,再设一次
+                recordStephenJPushToken();//谨慎起见,再设一次
+                if(bootPushType == PushTypeHW){
+                    setActivityForBindHw(null);
+                    HMSAgent.Push.getToken(new GetTokenHandler() {
+                        @Override
+                        public void onResult(int rst) {
+                            System.out.println("===com.stephen.push===华为推送==GetTokenHandler====>"+(0 == rst ? "成功" : "失败:Code:"+rst));
+                        }
+                    });
+                }// end of if
+            }
+        }, 3000);
     }
 
     //应用主activity的onCreate方法中必须调用
-    public void startHuaWeiPush(Activity activity){
-        recordStephenMiPushToken();//谨慎起见,再设一次
-        recordStephenJPushToken();//谨慎起见,再设一次
-        if(bootPushType != PushTypeHW){
-            System.out.println("=====com.stephen.push=====>只是提示:如果开始华为推送必须先初始化华为推送而不是其他推送!");
-            return;
-        }// end of if
-        HMSAgent.connect(activity, new ConnectHandler() {
+    public void setActivityForBindHw(Activity activityForHw){
+        if(null != activityForHw)this.activityForHw = activityForHw;
+        if(null != this.activityForHw)HMSAgent.connect(this.activityForHw, new ConnectHandler() {
             @Override
             public void onConnect(int rst) {
-                System.out.println("===com.stephen.push===华为推送==onConnect====>"+rst);
-            }
-        });
-        HMSAgent.Push.getToken(new GetTokenHandler() {
-            @Override
-            public void onResult(int rst) {
-                System.out.println("===com.stephen.push===华为推送==GetTokenHandler====>"+rst);
+                System.out.println("===com.stephen.push===华为推送==onConnect====>"+(0 == rst ? "成功" : "失败:Code:"+rst));
             }
         });
     }
