@@ -30,7 +30,9 @@ android {
             JPUSH_PKGNAME: applicationId,
             JPUSH_APPKEY: "18ecbb94a863e01709c61007", //JPush 上注册的包名对应的 AppKey
             JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可
-            HAIWEI_APPID: "100816565" //华为push 上生成应用对应的 AppId
+            HAIWEI_APPID: "100816565", //华为push 上生成应用对应的 AppId
+            XIAOMI_APPID: "2882303761518011547",//小米push 上生成应用对应的 AppId
+            XIAOMI_APPKEY: "5661801118547"//小米push 上生成应用对应的 AppKey
         ]
     }
 
@@ -57,10 +59,10 @@ dependencies {
 </activity>
 ```
 
-* 然后在DemoApplication中onCreate方法启动注册Push,initStephenPush的第二个参数和第三个参数是小米的AppId和AppKey
+* 然后在DemoApplication中onCreate方法启动注册Push,initStephenPush的第二个参数是是否显示toast消息和第三个参数是上报服务域名和端口,传null用默认的
 
 ```
-if(StephenPushUtils.getInstance().shouldInit(this))StephenPushUtils.getInstance().initStephenPush(this,true, 小米AppId, 小米AppKey);
+if(StephenPushUtils.getInstance().shouldInit(this))StephenPushUtils.getInstance().initStephenPush(this, true, null);
 ```
 
 * 然后主Activity中(比如MainActivity)添加如下代码

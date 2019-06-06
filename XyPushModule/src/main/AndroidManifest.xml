@@ -37,6 +37,8 @@
     <application>
 
         <!-- 小米Push start -->
+        <meta-data android:name="MiPushAppId" android:value="AppId=${XIAOMI_APPID}" /><!--android:value里面加个字符串是为了自动转换成浮点型,导致获取失败-->
+        <meta-data android:name="MiPushAppKey" android:value="AppKey=${XIAOMI_APPKEY}" /><!--android:value里面加个字符串是为了自动转换成浮点型,导致获取失败-->
         <service
             android:name="com.xiaomi.push.service.XMJobService"
             android:enabled="true"

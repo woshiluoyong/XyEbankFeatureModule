@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Process;
@@ -54,20 +56,18 @@ public class StephenPushUtils {
     }
 
     public void initStephenPush(Application context, boolean isShowMsg){
-        initStephenPush(context, isShowMsg, null,null, null);
+        initStephenPush(context, isShowMsg, null);
     }
 
-    public void initStephenPush(Application context, boolean isShowMsg, String uploadBaseIpPort){
-        initStephenPush(context, isShowMsg, uploadBaseIpPort,null, null);
-    }
-
-    public void initStephenPush(final Application context,boolean isShowMsg,String uploadBaseIpPort,final String miPushAppId,final String miPushAppKey){
+    public void initStephenPush(final Application context,boolean isShowMsg,String uploadBaseIpPort){
         this.context = context;
         this.isShowInfoMsg = isShowMsg;
         if(!TextUtils.isEmpty(uploadBaseIpPort))this.serverBaseIpPort = uploadBaseIpPort;
         pushTypeMap.put(PushTypeJG,"JG");
         pushTypeMap.put(PushTypeXM,"XM");
         pushTypeMap.put(PushTypeHW,"HW");
+        final String miPushAppId = getMetaDataVal(this.context,"MiPushAppId","AppId=");
+        final String miPushAppKey = getMetaDataVal(this.context,"MiPushAppKey","AppKey=");
         Map<String, Object> map = new HashMap<>();
         map.put("mblModel", RomUtils.getBrandName());
         map.put("version", RomUtils.getVersion());
@@ -94,6 +94,9 @@ public class StephenPushUtils {
                 String msg = (null != e ? e.toString() : "Push开关请求报错为空!");
                 System.out.println("======com.stephen.push=====>Push开关初始化请求Error:" + msg);
                 if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+
+                bootPushType = PushTypeJG;
+                initStephenPushCore(bootPushType, miPushAppId, miPushAppKey);
             }
         }, map);
     }
@@ -244,7 +247,7 @@ public class StephenPushUtils {
         map.put("mblNo", mobileNo);//手机号
         map.put("userId", userId);//用户编号
         map.put("plateformId", pushTypeMap.get(bootPushType));//平台编号（XM:小米；HW:华为；JG：极光）
-        map.put("appId", appType);//(手机贷：sjd/金融苑：jry/享宇钱包：xyqb)
+        map.put("storeId", appType);//(手机贷：sjd/金融苑：jry/享宇钱包：xyqb)
         map.put("pushId", pushToken);//设备推送平台ID
         map.put("osType", 2);//系统类型（1、IOS;2、android）
         HttpUtils.doPost(context, serverBaseIpPort+"/push/service/pushPlateForm", new HttpCallbackStringListener() {
@@ -290,5 +293,17 @@ public class StephenPushUtils {
             }// end of if
         }// end of if
         return isRunning;
+    }
+
+    private String getMetaDataVal(Context context, String dataKey, String subStr){
+        String metaDataVal = null;
+        try {
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            metaDataVal = appInfo.metaData.getString(dataKey);
+            if(!TextUtils.isEmpty(metaDataVal) && !TextUtils.isEmpty(subStr))metaDataVal = metaDataVal.substring(metaDataVal.indexOf(subStr)+subStr.length());
+        } catch (PackageManager.NameNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        return metaDataVal;
     }
 }
