@@ -22,6 +22,9 @@ import com.xiaomi.channel.commonutils.logger.LoggerInterface;
 import com.xiaomi.mipush.sdk.Logger;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +36,8 @@ public class StephenPushUtils {
     private static volatile StephenPushUtils singleton;
     private static final String PushTokenKey = "pushToken";
     public static final int PushTypeJG = 0,PushTypeXM = 1,PushTypeHW = 2;
-    public static final String AppTypeSJD = "sjd",AppTypeJRY = "jry",AppTypeXYQB = "xyqb";
+    public static final String AppTypeSJD = "sjd",AppTypeJRY = "jry",AppTypeXYQB = "xyqb",ExtraPushRecordId = "pushRecordId";
+    public static final int StatisticsTypeArrival = 0,StatisticsTypeClick = 1;
     private Map<Integer,String> pushTypeMap = new HashMap<>();
     private int bootPushType = PushTypeJG;//0极光,1小米,2华为
     private Application context = null;
@@ -259,6 +263,48 @@ public class StephenPushUtils {
             @Override
             public void onError(Exception e) {
                 String msg = (null != e ? e.toString() : "Push上报Token请求报错为空!");
+                System.out.println("======com.stephen.push======>doPost Error:" + msg);
+                if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+            }
+        }, map);
+    }
+
+    //上报推送到达/点击统计事件
+    public void uploadStephenPushStatistics(String pushMsgStr,int uploadType){
+        if (TextUtils.isEmpty(pushMsgStr))return;
+        String pushRecordId = null;
+        try {
+            JSONObject jsonObject = new JSONObject(pushMsgStr);
+            if(null != jsonObject && jsonObject.has(ExtraPushRecordId))pushRecordId = jsonObject.getString(ExtraPushRecordId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        uploadStephenPushStatistics(uploadType, pushRecordId);
+    }
+
+    public void uploadStephenPushStatistics(int uploadType,String pushRecordId){
+        if (TextUtils.isEmpty(pushRecordId))return;
+        String uploadUrl = null;
+        switch (uploadType) {
+            case StatisticsTypeArrival:
+                uploadUrl = "/countArrival";
+                break;
+            case StatisticsTypeClick:
+                uploadUrl = "/countClick";
+                break;
+        }// end of switch
+        if (TextUtils.isEmpty(uploadUrl))return;
+        Map<String, Object> map = new HashMap<>();
+        map.put("pushRecordId", pushRecordId);//推送任务记录ID
+        HttpUtils.doPost(context, serverBaseIpPort+"/push/service"+uploadUrl, new HttpCallbackStringListener() {
+            @Override
+            public void onFinish(String response) {
+                System.out.println("======com.stephen.push======>Push上报统计事件请求Ok:" + response);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                String msg = (null != e ? e.toString() : "Push上报统计事件请求报错为空!");
                 System.out.println("======com.stephen.push======>doPost Error:" + msg);
                 if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }

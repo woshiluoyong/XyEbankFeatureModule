@@ -2,6 +2,7 @@ package com.xyebank.stephen.push;
 
 import android.app.Notification;
 import android.content.Context;
+import android.text.TextUtils;
 
 import cn.jpush.android.api.CmdMessage;
 import cn.jpush.android.api.CustomMessage;
@@ -35,6 +36,9 @@ public class MyJPushMessageReceiver extends JPushMessageReceiver {
     public void onNotifyMessageArrived(Context context, NotificationMessage notificationMessage) {
         super.onNotifyMessageArrived(context, notificationMessage);
         System.out.println("=====com.stephen.push==JPush====onNotifyMessageArrived=============>"+notificationMessage.toString());
+        if(null != notificationMessage && !TextUtils.isEmpty(notificationMessage.notificationExtras)){
+            StephenPushUtils.getInstance().uploadStephenPushStatistics(notificationMessage.notificationExtras,StephenPushUtils.StatisticsTypeArrival);
+        }// end of if
     }
 
     @Override

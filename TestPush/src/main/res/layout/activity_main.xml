@@ -10,88 +10,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/set_alias"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_button"
-            android:background="@drawable/all_btn"
-            android:paddingLeft="@dimen/set_padding"
-            android:paddingRight="@dimen/set_padding"
-            android:text="@string/set_alias"
-            android:textSize="@dimen/text_btn_size" />
-
-        <Button
-            android:id="@+id/set_account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/margin_button"
-            android:background="@drawable/all_btn"
-            android:paddingLeft="@dimen/set_padding"
-            android:paddingRight="@dimen/set_padding"
-            android:text="@string/set_account"
-            android:textSize="@dimen/text_btn_size" />
-
-        <Button
-            android:id="@+id/subscribe_topic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_button"
-            android:background="@drawable/all_btn"
-            android:paddingLeft="@dimen/set_padding"
-            android:paddingRight="@dimen/set_padding"
-            android:text="@string/subscribe_topic"
-            android:textSize="@dimen/text_btn_size" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/unset_alias"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_button"
-            android:background="@drawable/all_btn"
-            android:paddingLeft="@dimen/set_padding"
-            android:paddingRight="@dimen/set_padding"
-            android:text="@string/unset_alias"
-            android:textSize="@dimen/text_btn_size" />
-
-        <Button
-            android:id="@+id/unset_account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_button"
-            android:background="@drawable/all_btn"
-            android:paddingLeft="@dimen/set_padding"
-            android:paddingRight="@dimen/set_padding"
-            android:text="@string/unset_account"
-            android:textSize="@dimen/text_btn_size" />
-
-        <Button
-            android:id="@+id/unsubscribe_topic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_button"
-            android:background="@drawable/all_btn"
-            android:paddingLeft="@dimen/set_padding"
-            android:paddingRight="@dimen/set_padding"
-            android:text="@string/unsubscribe_topic"
-            android:textSize="@dimen/text_btn_size" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <Button
             android:id="@+id/pause_push"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,6 +30,13 @@
             android:paddingRight="@dimen/set_padding"
             android:text="进入M2"
             android:textSize="@dimen/text_btn_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/set_accept_time"

@@ -1,6 +1,7 @@
 package com.xyebank.stephen.push;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -32,6 +33,9 @@ public class XiaoMiPushMessageReceiver extends PushMessageReceiver {
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage message) {
         System.out.println("====com.stephen.push==XMPush======onNotificationMessageArrived is called. " + (null != message ? message.toString() : ""));
+        if(null != message && null != message.getExtra() && !TextUtils.isEmpty(message.getExtra().get(StephenPushUtils.ExtraPushRecordId))){
+            StephenPushUtils.getInstance().uploadStephenPushStatistics(StephenPushUtils.StatisticsTypeArrival,message.getExtra().get(StephenPushUtils.ExtraPushRecordId));
+        }// end of if
     }
 
     @Override

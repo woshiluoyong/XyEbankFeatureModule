@@ -17,6 +17,7 @@ public class PushTranslateActivity extends Activity {
         String pushParam = null;
         try {
             pushParam = getIntent().getData().getQueryParameter("action");
+            StephenPushUtils.getInstance().uploadStephenPushStatistics(pushParam,StephenPushUtils.StatisticsTypeClick);
         } catch (Exception e){
             e.printStackTrace();
         }
