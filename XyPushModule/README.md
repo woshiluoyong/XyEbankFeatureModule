@@ -5,13 +5,15 @@
 allprojects {
     repositories {
         ...
+        google()
+        jcenter()
         maven {url 'http://developer.huawei.com/repo/'}
         maven { url 'https://jitpack.io' }
     }
 }
 ```
 
-* 依赖本项目XyPushModule,注意:如果你项目用的gradle插件版本低于3.0,需要修改push模块项目中的implementation和api改成compile
+* 依赖本项目XyPushModule,注意:如果你项目用的gradle插件版本低于3.0,需要修改push模块项目中的implementation和api改成compile,依赖的版本按最新的来
 
 * 在业务项目的build.gradle处加入
 * 极光和华为的配置代码到manifestPlaceholders
@@ -42,7 +44,7 @@ android {
 dependencies {
     ...
 
-    api project(':XyPushModule')
+    implementation 'com.github.woshiluoyong:XyEbankFeatureModule:1.1'
 }
 ```
 
