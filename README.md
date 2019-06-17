@@ -30,11 +30,11 @@ android {
 
         manifestPlaceholders = [
             JPUSH_PKGNAME: applicationId,
-            JPUSH_APPKEY: "18ecbb94a863e01709c61007", //JPush 上注册的包名对应的 AppKey
+            JPUSH_APPKEY: "xxxx", //JPush 上注册的包名对应的 AppKey
             JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可
-            HAIWEI_APPID: "100816565", //华为push 上生成应用对应的 AppId
-            XIAOMI_APPID: "2882303761518011547",//小米push 上生成应用对应的 AppId
-            XIAOMI_APPKEY: "5661801118547"//小米push 上生成应用对应的 AppKey
+            HAIWEI_APPID: "xxxx", //华为push 上生成应用对应的 AppId
+            XIAOMI_APPID: "xxxx",//小米push 上生成应用对应的 AppId
+            XIAOMI_APPKEY: "xxxxx"//小米push 上生成应用对应的 AppKey
         ]
     }
 
