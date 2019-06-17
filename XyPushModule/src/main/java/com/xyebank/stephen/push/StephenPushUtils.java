@@ -44,7 +44,7 @@ public class StephenPushUtils {
     private Application context = null;
     private Activity activityForHw = null;
     private boolean isShowInfoMsg = false;
-    private String serverBaseIpPort = "http://192.168.2.10:9966";
+    private String serverBaseIpPort = "https://sjd-test.xycredit.com.cn";
     private String miPushAppID = null, miPushAppKEY = null;//小米push相关参数
 
     private StephenPushUtils() {}
