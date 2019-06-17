@@ -56,7 +56,7 @@ dependencies {
     <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
-        <data android:host="com.xyebank.stephen.push" android:path="/notification" android:scheme="stephenpush" />
+        <data android:host="com.xyebank.stephen.push.${applicationId}" android:path="/notification" android:scheme="stephenpush" />
     </intent-filter>
 </activity>
 ```
@@ -114,5 +114,11 @@ protected void onCreate(Bundle savedInstanceState) {
 
 * 最后就是回到MainActivity中的receiveFromPush方法中根据参数处理对应跳转逻辑
 
-# 注意:后台推送处需要推送的是自定义动作哈,值为:"intent://com.xyebank.stephen.push/notification?action=stephen-test-parameter#Intent;scheme=stephenpush;launchFlags=0x10000000;end",里面的action=stephen-test-parameter就是键值对参数
+# 注意:后台推送处需要推送的是自定义动作哈,值为:
+```
+intent://com.xyebank.stephen.push.包名/notification?action=stephen-test-parameter#Intent;scheme=stephenpush;launchFlags=0x10000000;end
+```
+
+其中的'包名'替换成你应用的包名,action=stephen-test-parameter就是键值对参数,
+
 # 特别注意:某些手机品牌(比如vivo)系统安装apk后会默认关闭应用的通知功能,导致误认为没收到推送通知,请到设置界面通知管理里面确认是否允许通知显示

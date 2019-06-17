@@ -23,7 +23,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:host="com.xyebank.stephen.push" android:path="/notification" android:scheme="stephenpush" />
+                <data android:host="com.xyebank.stephen.push.${applicationId}" android:path="/notification" android:scheme="stephenpush" />
             </intent-filter>
         </activity>
 
