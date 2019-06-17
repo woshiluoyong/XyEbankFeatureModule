@@ -2,6 +2,7 @@ package com.httpurlconnectionutil;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.widget.Toast;
 
 import com.httpurlconnectionutil.callback.HttpCallbackBytesListener;
 import com.httpurlconnectionutil.callback.HttpCallbackStringListener;
@@ -163,7 +164,7 @@ public class HttpUtils {
      * @param listener  回调监听
      * @param params 参数列表
      */
-    public static void doPost(final Context context,
+    public static void doPost(final Context context,boolean isShowMsg,
                               final String urlString, final HttpCallbackStringListener listener,
                               final Map<String, Object> params) {
         final StringBuffer out = new StringBuffer();
@@ -171,7 +172,9 @@ public class HttpUtils {
         for (String key : params.keySet())out.append("\""+key+"\"").append(":").append("\""+params.get(key)+"\",");
         out.deleteCharAt(out.length()-1);
         out.append("}");
-        System.out.println("===doPost===url:"+urlString+"====params:"+out.toString());
+        String msg = "===doPost===url:"+urlString+"====params:"+out.toString();
+        System.out.println(msg);
+        if(isShowMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         // 因为网络请求是耗时操作，所以需要另外开启一个线程来执行该任务。
         threadPool.execute(new Runnable() {
             @Override

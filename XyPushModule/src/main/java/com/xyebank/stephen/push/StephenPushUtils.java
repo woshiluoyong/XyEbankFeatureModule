@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.httpurlconnectionutil.HttpUtils;
 import com.httpurlconnectionutil.RomUtils;
+import com.httpurlconnectionutil.callback.HttpCallbackBytesListener;
 import com.httpurlconnectionutil.callback.HttpCallbackStringListener;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.common.handler.ConnectHandler;
@@ -43,8 +44,8 @@ public class StephenPushUtils {
     private Application context = null;
     private Activity activityForHw = null;
     private boolean isShowInfoMsg = false;
-    private String serverBaseIpPort = "https://sjd-test.xycredit.com.cn";
-    private static String miPushAppID = null, miPushAppKEY = null;//小米push相关参数
+    private String serverBaseIpPort = "http://192.168.2.10:9966";
+    private String miPushAppID = null, miPushAppKEY = null;//小米push相关参数
 
     private StephenPushUtils() {}
 
@@ -75,12 +76,18 @@ public class StephenPushUtils {
         Map<String, Object> map = new HashMap<>();
         map.put("mblModel", RomUtils.getBrandName());
         map.put("version", RomUtils.getVersion());
-        HttpUtils.doPost(context, serverBaseIpPort+"/push/service/pushOnOff", new HttpCallbackStringListener() {
+        HttpUtils.doPost(context,isShowInfoMsg, serverBaseIpPort+"/push/service/pushOnOff", new HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
-                //response = "HW";//test
-                System.out.println("======com.stephen.push======>Push开关请求Ok:" + response);
+                //response = "{\"body\":\"XM\",\"errMsg\":\"操作成功\",\"errorCode\":0,\"message\":null,\"signature\":null}";//test
+                String msg = "Push开关请求Ok:" + response;
+                System.out.println("======com.stephen.push======>"+msg);
+                if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
                 if(!TextUtils.isEmpty(response)){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(null != jsonObject && jsonObject.has("errorCode") && 0 == jsonObject.getInt("errorCode") && jsonObject.has("body"))response = jsonObject.getString("body");
+                    }catch (Exception e){e.printStackTrace();}
                     for(Map.Entry<Integer, String> entry : pushTypeMap.entrySet()) {
                         if(response.equals(entry.getValue())){
                             bootPushType = entry.getKey();
@@ -96,7 +103,7 @@ public class StephenPushUtils {
             @Override
             public void onError(Exception e) {
                 String msg = (null != e ? e.toString() : "Push开关请求报错为空!");
-                System.out.println("======com.stephen.push=====>Push开关初始化请求Error:" + msg);
+                System.out.println("======com.stephen.push======>Push开关初始化请求Error:" + msg);
                 if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 
                 bootPushType = PushTypeJG;
@@ -254,10 +261,12 @@ public class StephenPushUtils {
         map.put("storeId", appType);//(手机贷：sjd/金融苑：jry/享宇钱包：xyqb)
         map.put("pushId", pushToken);//设备推送平台ID
         map.put("osType", 2);//系统类型（1、IOS;2、android）
-        HttpUtils.doPost(context, serverBaseIpPort+"/push/service/pushPlateForm", new HttpCallbackStringListener() {
+        HttpUtils.doPost(context,isShowInfoMsg, serverBaseIpPort+"/push/service/pushPlateForm", new HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
-                System.out.println("======com.stephen.push======>Push上报Token请求Ok:" + response);
+                String msg = "Push上报Token请求Ok:" + response;
+                System.out.println("======com.stephen.push======>"+msg);
+                if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -296,7 +305,7 @@ public class StephenPushUtils {
         if (TextUtils.isEmpty(uploadUrl))return;
         Map<String, Object> map = new HashMap<>();
         map.put("pushRecordId", pushRecordId);//推送任务记录ID
-        HttpUtils.doPost(context, serverBaseIpPort+"/push/service"+uploadUrl, new HttpCallbackStringListener() {
+        HttpUtils.doPost(context,isShowInfoMsg, serverBaseIpPort+"/push/service"+uploadUrl, new HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
                 System.out.println("======com.stephen.push======>Push上报统计事件请求Ok:" + response);
