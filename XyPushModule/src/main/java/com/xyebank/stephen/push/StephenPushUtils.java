@@ -242,18 +242,19 @@ public class StephenPushUtils {
             System.out.println("=====com.stephen.push=====>"+msg);
             return;
         }// end of if
-        switch(appType){
+        /*switch(appType){
             case AppTypeSJD:
             case AppTypeJRY:
             case AppTypeXYQB:
                 System.out.println("=====com.stephen.push====("+appType+")开始上报Token===>"+pushToken);
                 break;
             default:
-                String msg = "准备上报Token对应的应用类型不存在,请检查!";
+                String msg = "准备上报Token对应的应用类型不在预设字段里面,请确认是否正确!";
                 if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
                 System.out.println("=====com.stephen.push=====>"+msg);
-                return;
-        }// end of switch
+                //return;
+        }// end of switch*/
+        System.out.println("=====com.stephen.push====("+appType+")开始上报Token===>"+pushToken);
         Map<String, Object> map = new HashMap<>();
         map.put("mblNo", mobileNo);//手机号
         map.put("userId", userId);//用户编号
