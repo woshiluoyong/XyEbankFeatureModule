@@ -55,7 +55,7 @@ public class SharedUtil {
 
 	public static String getString(Context context,String key) {
 		SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
-		return sharedPreferences.getString(key,null);
+		return sharedPreferences.getString(key,"");
 	}
 	
 	public static void putBoolean(Context context,String key, boolean value) {

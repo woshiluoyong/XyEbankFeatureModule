@@ -35,7 +35,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class StephenPushUtils {
     private static volatile StephenPushUtils singleton;
-    private static final String PushTokenKey = "pushToken";
+    private static final String PushTokenKey = "pushToken",PushPlatformIdKey = "platformId";
     public static final int PushTypeJG = 0,PushTypeXM = 1,PushTypeHW = 2;
     public static final String AppTypeSJD = "sjd",AppTypeJRY = "jry",AppTypeXYQB = "xyqb",ExtraPushRecordId = "pushRecordId";
     public static final int StatisticsTypeArrival = 0,StatisticsTypeClick = 1;
@@ -43,7 +43,7 @@ public class StephenPushUtils {
     private int bootPushType = PushTypeJG;//0极光,1小米,2华为
     private Application context = null;
     private Activity activityForHw = null;
-    private boolean isShowInfoMsg = false;
+    private boolean isShowInfoMsg = false,isNeedUploadToken = true;
     private String serverBaseIpPort = "https://sjd-test.xycredit.com.cn";
     private String miPushAppID = null, miPushAppKEY = null;//小米push相关参数
 
@@ -71,11 +71,13 @@ public class StephenPushUtils {
         pushTypeMap.put(PushTypeJG,"JG");
         pushTypeMap.put(PushTypeXM,"XM");
         pushTypeMap.put(PushTypeHW,"HW");
+        bootPushType = findPushType(SharedUtil.getString(this.context, PushPlatformIdKey));
         final String miPushAppId = getMetaDataVal(this.context,"MiPushAppId","AppId=");
         final String miPushAppKey = getMetaDataVal(this.context,"MiPushAppKey","AppKey=");
         Map<String, Object> map = new HashMap<>();
         map.put("mblModel", RomUtils.getBrandName());
         map.put("version", RomUtils.getVersion());
+        map.put("plateformId", SharedUtil.getString(this.context, PushPlatformIdKey));//本地存储的平台编号（XM:小米；HW:华为；JG：极光）
         HttpUtils.doPost(context,isShowInfoMsg, serverBaseIpPort+"/push/service/pushOnOff", new HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
@@ -84,16 +86,19 @@ public class StephenPushUtils {
                 System.out.println("======com.stephen.push======>"+msg);
                 if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
                 if(!TextUtils.isEmpty(response)){
+                    String getPlatformId = null;
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        if(null != jsonObject && jsonObject.has("errorCode") && 0 == jsonObject.getInt("errorCode") && jsonObject.has("body"))response = jsonObject.getString("body");
-                    }catch (Exception e){e.printStackTrace();}
-                    for(Map.Entry<Integer, String> entry : pushTypeMap.entrySet()) {
-                        if(response.equals(entry.getValue())){
-                            bootPushType = entry.getKey();
-                            break;
+                        if(null != jsonObject && jsonObject.has("errorCode") && 0 == jsonObject.getInt("errorCode") && jsonObject.has("body")){
+                            jsonObject = new JSONObject(jsonObject.getString("body"));
+                            if(null != jsonObject && jsonObject.has("plateformId")){
+                                getPlatformId = jsonObject.getString("plateformId");
+                                SharedUtil.putString(context, PushPlatformIdKey, getPlatformId);
+                            }// end of if
+                            if(null != jsonObject && jsonObject.has("isNext"))isNeedUploadToken = jsonObject.getBoolean("isNext");//true:收集/false不收集
                         }// end of if
-                    }// end of for
+                    }catch (Exception e){e.printStackTrace();}
+                    bootPushType = findPushType(getPlatformId);
                 }else{
                     bootPushType = PushTypeJG;
                 }
@@ -110,6 +115,17 @@ public class StephenPushUtils {
                 initStephenPushCore(bootPushType, miPushAppId, miPushAppKey);
             }
         }, map);
+    }
+
+    private int findPushType(String flagStr){
+        if(!TextUtils.isEmpty(flagStr)){
+            for(Map.Entry<Integer, String> entry : pushTypeMap.entrySet()) {
+                if(flagStr.equals(entry.getValue())){
+                    return entry.getKey();
+                }// end of if
+            }// end of for
+        }// end of if
+        return PushTypeJG;
     }
 
     private void initStephenPushCore(final int bootPushType, String miPushAppId, String miPushAppKey){//注册启动push服务
@@ -235,6 +251,12 @@ public class StephenPushUtils {
 
     //上报推送对应token及信息
     public void uploadStephenPushToken(String mobileNo,String userId,String appType){
+        if(!isNeedUploadToken){
+            String msg = "后台决定不需要上报Token,上报操作取消!";
+            if(isShowInfoMsg)Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+            System.out.println("=====com.stephen.push=====>"+msg);
+            return;
+        }// end of if
         String pushToken = SharedUtil.getString(context,PushTokenKey+bootPushType);
         if(TextUtils.isEmpty(pushToken)){
             String msg = "准备上报Token未获取成功,请检查!";
